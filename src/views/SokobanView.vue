@@ -3,16 +3,67 @@ import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useSokobanStore } from "@/stores/useSokobanStore";
+import { useExitConfirm } from "@/composables/useExitConfirm";
+import ExitConfirmDialog from "@/components/ExitConfirmDialog.vue";
 import type { Direction, Position, SokobanCell } from "@/types";
 
 const router = useRouter();
 const { t } = useI18n();
 const store = useSokobanStore();
+const { open, requestExit, confirm, cancel } = useExitConfirm();
 
 const victoryDialogOpen = ref(false);
 const defeatDialogOpen = ref(false);
-const forfeitDialogOpen = ref(false);
 const animatingPos = ref<Position | null>(null);
+const boardRef = ref<HTMLDivElement | null>(null);
+const gridStyle = ref<Record<string, string>>({});
+
+const BOARD_PADDING = 16;
+const GAP = 1;
+let resizeObserver: ResizeObserver | null = null;
+
+const GAME_KEYS = new Set([
+  "ArrowUp",
+  "ArrowDown",
+  "ArrowLeft",
+  "ArrowRight",
+  "w",
+  "a",
+  "s",
+  "d",
+  "W",
+  "A",
+  "S",
+  "D",
+]);
+const MOVE_COOLDOWN_MS = 80;
+const pressedKeys = new Set<string>();
+let lastMoveAt = 0;
+
+const rows = computed(() => grid.value.length);
+
+function updateGridSize() {
+  const board = boardRef.value;
+  if (!board || cols.value === 0 || rows.value === 0) return;
+
+  const rect = board.getBoundingClientRect();
+  const availW = rect.width - BOARD_PADDING * 2 - GAP * (cols.value - 1);
+  const availH = rect.height - BOARD_PADDING * 2 - GAP * (rows.value - 1);
+
+  const cellW = availW / cols.value;
+  const cellH = availH / rows.value;
+  const cellSize = Math.max(0, Math.floor(Math.min(cellW, cellH)));
+
+  const gridW = cellSize * cols.value + GAP * (cols.value - 1);
+  const gridH = cellSize * rows.value + GAP * (rows.value - 1);
+
+  gridStyle.value = {
+    gridTemplateColumns: `repeat(${cols.value}, 1fr)`,
+    gridTemplateRows: `repeat(${rows.value}, 1fr)`,
+    width: `${gridW}px`,
+    height: `${gridH}px`,
+  };
+}
 
 const isWon = computed(() => store.status === "won");
 const isLost = computed(() => store.status === "lost");
@@ -37,6 +88,14 @@ const flatCells = computed(() => {
 
 const cols = computed(() => grid.value[0]?.length ?? 0);
 
+// Recompute grid size whenever the level (and therefore grid dimensions) changes.
+watch([cols, rows], updateGridSize, { flush: "post" });
+
+// Clear box animation state when advancing to a new level.
+watch(() => store.currentLevel, () => {
+  animatingPos.value = null;
+});
+
 function cellClasses(cell: SokobanCell, x: number, y: number): string[] {
   const classes = ["cell"];
   if (cell.wall) classes.push("wall");
@@ -50,8 +109,15 @@ function cellClasses(cell: SokobanCell, x: number, y: number): string[] {
   return classes;
 }
 
-function handleKey(event: KeyboardEvent) {
+function handleKeyDown(event: KeyboardEvent) {
   if (!store.engine) return;
+
+  if (GAME_KEYS.has(event.key)) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  if (event.repeat) return;
 
   const keyMap: Record<string, Direction> = {
     ArrowUp: "up",
@@ -69,32 +135,58 @@ function handleKey(event: KeyboardEvent) {
   };
 
   const dir = keyMap[event.key];
-  if (dir) {
-    event.preventDefault();
-    const result = store.move(dir);
-    if (result.pushedTo) {
-      animatingPos.value = result.pushedTo;
-      if (result.won) {
-        setTimeout(() => {
-          animatingPos.value = null;
-          store.completeLevel();
-        }, 700);
-      } else {
-        setTimeout(() => {
-          animatingPos.value = null;
-        }, 500);
-      }
+  if (!dir) return;
+
+  // Only process when no other game key is held. This prevents accidental
+  // diagonal / double moves when keys are pressed simultaneously or roll over.
+  const hasOtherGameKey = Array.from(pressedKeys).some((k) => GAME_KEYS.has(k));
+  if (hasOtherGameKey) return;
+
+  const now = Date.now();
+  if (now - lastMoveAt < MOVE_COOLDOWN_MS) return;
+  lastMoveAt = now;
+
+  pressedKeys.add(event.key);
+
+  const result = store.move(dir);
+  if (result.pushedTo) {
+    animatingPos.value = result.pushedTo;
+    if (result.won) {
+      setTimeout(() => {
+        animatingPos.value = null;
+        store.completeLevel();
+      }, 700);
+    } else {
+      setTimeout(() => {
+        animatingPos.value = null;
+      }, 500);
     }
   }
 }
 
+function handleKeyUp(event: KeyboardEvent) {
+  pressedKeys.delete(event.key);
+}
+
 onMounted(() => {
-  window.addEventListener("keydown", handleKey);
+  window.addEventListener("keydown", handleKeyDown);
+  window.addEventListener("keyup", handleKeyUp);
   store.startAdventure(1);
+  updateGridSize();
+  resizeObserver = new ResizeObserver(() => {
+    updateGridSize();
+  });
+  if (boardRef.value) {
+    resizeObserver.observe(boardRef.value);
+  }
 });
 
 onUnmounted(() => {
-  window.removeEventListener("keydown", handleKey);
+  window.removeEventListener("keydown", handleKeyDown);
+  window.removeEventListener("keyup", handleKeyUp);
+  resizeObserver?.disconnect();
+  resizeObserver = null;
+  pressedKeys.clear();
   store.resetGame();
 });
 
@@ -102,22 +194,16 @@ function reset() {
   store.resetLevel();
 }
 
-function nextLevel() {
-  store.nextLevel();
-}
-
 function backHome() {
   if (isGameActive.value) {
-    forfeitDialogOpen.value = true;
+    requestExit("/", store.resetGame);
   } else {
     router.push("/");
   }
 }
 
-function confirmForfeit() {
-  forfeitDialogOpen.value = false;
-  store.resetGame();
-  router.push("/");
+function nextLevel() {
+  store.nextLevel();
 }
 </script>
 
@@ -126,12 +212,12 @@ function confirmForfeit() {
     >
     <div class="game-layout"
       >
-      <div class="game-board"
+      <div class="game-board" ref="boardRef"
         >
         <div
           v-if="grid.length > 0"
           class="grid"
-          :style="{ gridTemplateColumns: `repeat(${cols}, 1fr)` }"
+          :style="gridStyle"
         >
           <div
             v-for="{ x, y, cell } in flatCells"
@@ -243,22 +329,12 @@ function confirmForfeit() {
       </div>
     </div>
 
-    <div v-if="forfeitDialogOpen" class="modal-backdrop" @click.self="forfeitDialogOpen = false"
-      >
-      <div class="modal"
-        >
-        <div class="modal-title">{{ t("sokoban.title") }}</div>
-        <div class="modal-content"
-          >{{ t("sokoban.forfeitConfirm") }}</div>
-        <div class="modal-actions"
-          >
-          <button class="modal-btn secondary" @click="forfeitDialogOpen = false"
-            >{{ t("common.cancel") }}</button>
-          <button class="modal-btn primary" @click="confirmForfeit"
-            >{{ t("common.confirm") }}</button>
-        </div>
-      </div>
-    </div>
+    <ExitConfirmDialog
+      :open="open"
+      :message="t('sokoban.forfeitConfirm')"
+      @confirm="confirm"
+      @cancel="cancel"
+    />
   </div>
 </template>
 
@@ -295,10 +371,8 @@ function confirmForfeit() {
 
 .grid {
   display: grid;
-  width: 100%;
-  height: 100%;
-  max-width: min(100%, calc(100vh - 200px));
-  max-height: 100%;
+  width: var(--grid-width, 100%);
+  height: var(--grid-height, 100%);
   gap: 1px;
   background: #b0aead;
   border: 1px solid #b0aead;
@@ -307,7 +381,6 @@ function confirmForfeit() {
 }
 
 .cell {
-  aspect-ratio: 1;
   background: #fff8e7;
   display: grid;
   place-items: center;

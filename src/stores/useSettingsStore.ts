@@ -7,7 +7,8 @@ const STORAGE_KEY = "settings";
 
 const DEFAULT_SETTINGS: Settings = {
   locale: "zh-CN",
-  soundEnabled: true,
+  theme: "system",
+  themeColor: "purple",
 };
 
 export const useSettingsStore = defineStore("settings", () => {
@@ -32,8 +33,13 @@ export const useSettingsStore = defineStore("settings", () => {
     save();
   }
 
-  function setSoundEnabled(enabled: boolean) {
-    settings.value.soundEnabled = enabled;
+  function setTheme(theme: Settings["theme"]) {
+    settings.value.theme = theme;
+    save();
+  }
+
+  function setThemeColor(themeColor: Settings["themeColor"]) {
+    settings.value.themeColor = themeColor;
     save();
   }
 
@@ -55,7 +61,8 @@ export const useSettingsStore = defineStore("settings", () => {
     load,
     save,
     setLocale,
-    setSoundEnabled,
+    setTheme,
+    setThemeColor,
     reset,
   };
 });

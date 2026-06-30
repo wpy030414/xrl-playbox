@@ -72,6 +72,30 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
     points: 50,
     unlockedAt: null,
   },
+  {
+    id: "human-printer",
+    game: "typing",
+    nameKey: "ach.humanPrinter.name",
+    descKey: "ach.humanPrinter.desc",
+    points: 100,
+    unlockedAt: null,
+  },
+  {
+    id: "indian-typist",
+    game: "typing",
+    nameKey: "ach.indianTypist.name",
+    descKey: "ach.indianTypist.desc",
+    points: 50,
+    unlockedAt: null,
+  },
+  {
+    id: "hatsune-disappearance",
+    game: "typing",
+    nameKey: "ach.hatsuneDisappearance.name",
+    descKey: "ach.hatsuneDisappearance.desc",
+    points: 50,
+    unlockedAt: null,
+  },
 ];
 
 export const useAchievementStore = defineStore("achievements", () => {

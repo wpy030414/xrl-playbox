@@ -2,18 +2,27 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAchievementStore } from "@/stores/useAchievementStore";
+import { useGames } from "@/composables/useGames";
 import type { GameId } from "@/types";
 
 const { t } = useI18n();
 const store = useAchievementStore();
+const { games } = useGames();
 
 const filter = ref<GameId | "all">("all");
 
-const filters: { key: GameId | "all"; labelKey: string }[] = [
-  { key: "all", labelKey: "achievements.filterAll" },
-  { key: "sokoban", labelKey: "achievements.filterSokoban" },
-  { key: "deal", labelKey: "achievements.filterDeal" },
-];
+const FILTER_LABEL_KEYS: Record<GameId | "all", string> = {
+  all: "achievements.filterAll",
+  sokoban: "achievements.filterSokoban",
+  deal: "achievements.filterDeal",
+  typing: "achievements.filterTyping",
+  selftest: "achievements.filterSelftest",
+};
+
+const filters = computed(() => [
+  { key: "all" as const, labelKey: FILTER_LABEL_KEYS.all },
+  ...games.value.map((g) => ({ key: g.id, labelKey: FILTER_LABEL_KEYS[g.id] })),
+]);
 
 const achievements = computed(() => store.byGame(filter.value));
 

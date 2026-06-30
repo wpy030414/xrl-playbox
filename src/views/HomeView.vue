@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { storageGet, storageSet } from "@/composables/useStorage";
+import { useGames } from "@/composables/useGames";
 import type { GameId } from "@/types";
 
 const router = useRouter();
-const { t } = useI18n();
+const { t, locale } = useI18n();
+const { games } = useGames();
+
+const LAST_LAUNCH_KEY = "lastLaunchTimes";
 
 type SortMode = "name" | "launch";
+type LaunchTimes = Partial<Record<GameId, number>>;
 
 const sortMode = ref<SortMode>("launch");
+const lastLaunchTimes = ref<LaunchTimes>({});
 
-interface GameMeta {
-  id: GameId;
-  titleKey: string;
-  emoji: string;
-}
-
-const games: GameMeta[] = [
-  { id: "sokoban", titleKey: "sokoban.title", emoji: "📦" },
-  { id: "deal", titleKey: "deal.title", emoji: "💼" },
-];
+onMounted(async () => {
+  lastLaunchTimes.value = (await storageGet<LaunchTimes>(LAST_LAUNCH_KEY)) ?? {};
+});
 
 function hash(str: string): number {
   let h = 0;
@@ -42,13 +42,40 @@ function gradientForTitle(title: string): string {
 }
 
 const sortedGames = computed(() => {
-  if (sortMode.value === "launch") return games;
-  return [...games].sort((a, b) => t(a.titleKey).localeCompare(t(b.titleKey)));
+  if (sortMode.value === "name") {
+    return games.value;
+  }
+  return [...games.value].sort((a, b) => {
+    const aTime = lastLaunchTimes.value[a.id] ?? 0;
+    const bTime = lastLaunchTimes.value[b.id] ?? 0;
+    if (bTime !== aTime) return bTime - aTime;
+    return t(a.titleKey).localeCompare(t(b.titleKey));
+  });
 });
 
-function play(id: GameId) {
+function formatLastLaunch(timestamp: number | undefined): string {
+  if (!timestamp) return t("games.lastLaunchNever");
+  const diff = Date.now() - timestamp;
+  const minutes = Math.floor(diff / 60_000);
+  const hours = Math.floor(diff / 3_600_000);
+  const days = Math.floor(diff / 86_400_000);
+
+  if (minutes < 1) return t("games.justNow");
+  if (hours < 1) return t("games.minutesAgo", { n: minutes });
+  if (days < 1) return t("games.hoursAgo", { n: hours });
+  if (days < 30) return t("games.daysAgo", { n: days });
+  return new Date(timestamp).toLocaleDateString(locale.value);
+}
+
+async function play(id: GameId) {
+  const next: LaunchTimes = { ...lastLaunchTimes.value, [id]: Date.now() };
+  lastLaunchTimes.value = next;
+  await storageSet(LAST_LAUNCH_KEY, next);
+
   if (id === "sokoban") router.push("/sokoban");
-  else router.push("/deal-or-no-deal");
+  else if (id === "deal") router.push("/deal-or-no-deal");
+  else if (id === "typing") router.push("/typing");
+  else router.push("/selftest");
 }
 
 function toggleSort() {
@@ -80,6 +107,9 @@ function toggleSort() {
       >
         <div class="emoji">{{ game.emoji }}</div>
         <div class="card-title">{{ t(game.titleKey) }}</div>
+        <div v-if="sortMode === 'launch'" class="launch-time"
+          >{{ formatLastLaunch(lastLaunchTimes[game.id]) }}</div
+        >
         <div class="shine"></div>
       </button>
     </div>
@@ -163,6 +193,20 @@ function toggleSort() {
   font-weight: 600;
   z-index: 1;
   text-align: center;
+}
+
+.launch-time {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  z-index: 1;
+  backdrop-filter: blur(2px);
 }
 
 .shine {

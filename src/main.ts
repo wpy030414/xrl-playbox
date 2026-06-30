@@ -4,10 +4,13 @@ import { createI18n } from "vue-i18n";
 import "@/components/Md3Components.ts";
 import App from "@/App.vue";
 import router from "@/router";
+import { applyThemeColor, isDarkMode } from "@/composables/useTheme";
 import { useAchievementStore } from "@/stores/useAchievementStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import zhCN from "@/assets/i18n/zh-CN.json";
 import en from "@/assets/i18n/en.json";
+import ja from "@/assets/i18n/ja.json";
+import es from "@/assets/i18n/es.json";
 
 const i18n = createI18n({
   legacy: false,
@@ -16,6 +19,8 @@ const i18n = createI18n({
   messages: {
     "zh-CN": zhCN,
     en,
+    ja,
+    es,
   },
 });
 
@@ -29,5 +34,12 @@ const settingsStore = useSettingsStore();
 const achievementStore = useAchievementStore();
 Promise.all([settingsStore.load(), achievementStore.load()]).then(() => {
   i18n.global.locale.value = settingsStore.settings.locale;
+  const theme = settingsStore.settings.theme;
+  if (theme === "system") {
+    document.documentElement.removeAttribute("data-theme");
+  } else {
+    document.documentElement.setAttribute("data-theme", theme);
+  }
+  applyThemeColor(settingsStore.settings.themeColor, isDarkMode(theme));
   app.mount("#app");
 });

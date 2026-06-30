@@ -1,0 +1,413 @@
+{
+  "app": {
+    "title": "XRL Playbox",
+    "subtitle": "Colección de minijuegos"
+  },
+  "nav": {
+    "games": "Juegos",
+    "achievements": "Logros",
+    "settings": "Ajustes",
+    "back": "Atrás"
+  },
+  "games": {
+    "title": "Biblioteca de juegos",
+    "greeting": "Elige un juego para jugar",
+    "play": "Jugar",
+    "sortByName": "Ordenar por nombre",
+    "sortByLaunch": "Ordenar por reciente",
+    "lastLaunchNever": "Nunca jugado",
+    "justNow": "ahora mismo",
+    "minutesAgo": "hace {n} min",
+    "hoursAgo": "hace {n} h",
+    "daysAgo": "hace {n} d"
+  },
+  "sokoban": {
+    "title": "Sokoban",
+    "description": "El clásico juego de empujar cajas con niveles aleatorios infinitos.",
+    "level": "Nivel {level}",
+    "steps": "Pasos: {used}/{limit}",
+    "resets": "Reinicios: {count}",
+    "boxesOnTarget": "En objetivo: {current}/{total}",
+    "controls": "Controles",
+    "controlHint": "Usa las flechas o WASD para moverte. Empuja las cajas hacia los objetivos verdes.",
+    "legend": "Leyenda",
+    "wall": "Pared",
+    "target": "Objetivo",
+    "box": "Caja",
+    "player": "Jugador",
+    "size": "Tamaño",
+    "reset": "Reiniciar nivel",
+    "victory": "¡Nivel completado!",
+    "defeat": "Sin pasos",
+    "nextLevel": "Siguiente nivel",
+    "forfeitConfirm": "¿Seguro que quieres salir y abandonar la partida actual?"
+  },
+  "deal": {
+    "title": "Maestro del Trato",
+    "description": "Deal or No Deal: 25 maletines, una elección que cambia la vida.",
+    "mode": {
+      "single": "Un jugador",
+      "double": "Dos jugadores"
+    },
+    "selectOwn": "Elige tu maletín",
+    "yourCase": "Tu maletín",
+    "eliminate": "Elimina {count} maletines (Ronda {round})",
+    "bankerOffer": "Oferta del banquero",
+    "deal": "TRATO",
+    "noDeal": "NO HAY TRATO",
+    "finalReveal": "Revelación final",
+    "result": "Resultado",
+    "win": "Ganaste {amount}",
+    "player1": "Jugador 1",
+    "player2": "Jugador 2",
+    "turn": "Turno de {player}",
+    "history": "Historial de ofertas",
+    "round": "Ronda {round}",
+    "amountBoard": "Tabla de montos",
+    "forfeitConfirm": "¿Seguro que quieres abandonar la partida actual?"
+  },
+  "typing": {
+    "title": "Carrera de mecanografía",
+    "subtitle": "Escribe extractos de Mark Twain",
+    "startHint": "Pulsa cualquier tecla para comenzar",
+    "chooseDifficulty": "Elige dificultad",
+    "difficulty": {
+      "easy": "Fácil",
+      "normal": "Normal",
+      "hard": "Difícil",
+      "expert": "Experto",
+      "master": "Maestro"
+    },
+    "wpm": "PPM",
+    "health": "Salud",
+    "time": "Tiempo",
+    "accuracy": "Precisión",
+    "words": "Palabras",
+    "baseline": "Base",
+    "victory": "¡Completado!",
+    "defeat": "Sin salud",
+    "finalWpm": "Velocidad final: {wpm} PPM",
+    "finalAccuracy": "Precisión: {accuracy}%",
+    "finalWords": "Palabras escritas: {words}",
+    "restart": "Jugar de nuevo",
+    "forfeitConfirm": "¿Seguro que quieres salir y abandonar la partida actual?"
+  },
+  "achievements": {
+    "title": "Logros",
+    "totalPoints": "Puntos totales: {points}",
+    "locked": "Bloqueado",
+    "unlocked": "Desbloqueado",
+    "newUnlock": "¡Logro desbloqueado!",
+    "filterAll": "Todos",
+    "filterSokoban": "Sokoban",
+    "filterDeal": "Maestro del Trato",
+    "filterTyping": "Carrera de mecanografía",
+    "filterSelftest": "Autoevaluación"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "language": "Idioma",
+    "theme": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "themeSystem": "Sistema",
+    "themeColor": "Color del tema",
+    "colorPurple": "Púrpura",
+    "colorBlue": "Azul",
+    "colorGreen": "Verde",
+    "colorRed": "Rojo",
+    "colorOrange": "Naranja",
+    "colorPink": "Rosa",
+    "colorTeal": "Verde azulado",
+    "github": "GitHub",
+    "copyright": "wpy030414 / xrl. Todos los derechos reservados.",
+    "resetData": "Restablecer todos los datos",
+    "resetConfirm": "¿Borrar todos los logros, ajustes y progreso? Esta acción no se puede deshacer.",
+    "redeemCode": "Canjear código",
+    "redeemSubmit": "Enviar",
+    "redeemSuccess": "Canjeado",
+    "redeemInvalid": "Comando inválido"
+  },
+  "common": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "continue": "Continuar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "ach": {
+    "hangOnTree": {
+      "name": "Colgado de un árbol",
+      "desc": "Reinicia el mismo nivel 3 veces seguidas"
+    },
+    "passFive": {
+      "name": "Pasar cinco niveles",
+      "desc": "Completa el nivel 5 por primera vez"
+    },
+    "cutSix": {
+      "name": "Cortar seis generales",
+      "desc": "Coloca 6 cajas en objetivos en un nivel sin reiniciar"
+    },
+    "millionaire": {
+      "name": "Millonario",
+      "desc": "Termina con un millón de dólares"
+    },
+    "millionPoor": {
+      "name": "Millonario pobre",
+      "desc": "Termina con $0.01"
+    },
+    "impatient": {
+      "name": "Impatiente",
+      "desc": "Acepta el trato tras la primera ronda de eliminación"
+    },
+    "reverseVilla": {
+      "name": "Villa al revés",
+      "desc": "Elimina 3 maletines seguidos de más de $100,000"
+    },
+    "prophet": {
+      "name": "Profeta",
+      "desc": "Acepta una oferta dentro del 1% del valor de tu maletín"
+    },
+    "humanPrinter": {
+      "name": "Impresora humana",
+      "desc": "Completa el juego sin bajar del PPM base"
+    },
+    "indianTypist": {
+      "name": "Mecanógrafo indio",
+      "desc": "Completa el juego con más del 50% de palabras erróneas"
+    },
+    "hatsuneDisappearance": {
+      "name": "La desaparición de Hatsune",
+      "desc": "Escribe más de 20 palabras correctas en 10 segundos"
+    }
+  },
+  "selftest": {
+    "title": "Autoevaluación",
+    "subtitle": "Tests divertidos de MBTI, SBTI y 8Values",
+    "chooseTest": "Elige una prueba",
+    "quit": "Salir",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "finish": "Finalizar",
+    "result": "Resultado",
+    "restart": "Reiniciar",
+    "forfeitConfirm": "¿Seguro que quieres salir y abandonar la prueba actual?",
+    "mbti": {
+      "title": "MBTI",
+      "subtitle": "Indicador Myers-Briggs",
+      "description": "Explora tus preferencias de personalidad con 12 preguntas rápidas.",
+      "e": "Extroversión E",
+      "i": "Introversión I",
+      "s": "Sensación S",
+      "n": "Intuición N",
+      "t": "Pensamiento T",
+      "f": "Sentimiento F",
+      "j": "Juicio J",
+      "p": "Percepción P",
+      "o": {
+        "stronglyAgreeLeft": "Totalmente en desacuerdo",
+        "agreeLeft": "En desacuerdo",
+        "neutral": "No estoy seguro",
+        "agreeRight": "De acuerdo",
+        "stronglyAgreeRight": "Totalmente de acuerdo"
+      },
+      "q1": "Te sientes recargado después de pasar tiempo a solas.",
+      "q2": "Prefieres conversaciones profundas uno a uno antes que grandes fiestas.",
+      "q3": "Sueles pensar antes de hablar.",
+      "q4": "Disfrutas explorar ideas abstractas y posibilidades futuras.",
+      "q5": "Confías más en la intuición y los patrones que en los hechos concretos.",
+      "q6": "Te centras en el panorama general más que en los pequeños detalles.",
+      "q7": "Tienes en cuenta los sentimientos de las personas al decidir.",
+      "q8": "Valoras la armonía y la compasión por encima de la lógica estricta.",
+      "q9": "A menudo te guías por la empatía para juzgar una situación.",
+      "q10": "Prefieres mantener las opciones abiertas antes que planificarlo todo.",
+      "q11": "Te adaptas fácilmente a cambios inesperados.",
+      "q12": "Disfrutas más las decisiones espontáneas que seguir un horario fijo.",
+      "result": {
+        "intj": {
+          "title": "Arquitecto",
+          "desc": "Eres independiente, racional y habilidoso para planificar a largo plazo. Los sistemas complejos son como rompecabezas para ti, y siempre encuentras la solución más eficiente."
+        },
+        "intp": {
+          "title": "Lógico",
+          "desc": "Tienes una curiosidad profunda y te encanta explorar teorías y principios. Disfrutas desmontar problemas y buscar la verdad más que ejecutar planes."
+        },
+        "entj": {
+          "title": "Comandante",
+          "desc": "Eres un líder nato con metas claras y acciones decisivas. Organizas recursos con destreza y guías a los equipos hacia la victoria."
+        },
+        "entp": {
+          "title": "Debatiendo",
+          "desc": "Eres ingenioso, provocador y te gusta examinar los problemas desde todos los ángulos. Tu creatividad suele sorprender a los demás."
+        },
+        "infj": {
+          "title": "Abogado",
+          "desc": "Eres tranquilo pero perspicaz, muy sensible a las emociones ajenas. Buscas el significado y trabajas en silencio por tus ideales."
+        },
+        "infp": {
+          "title": "Mediador",
+          "desc": "Eres gentil, idealista y valoras la autenticidad interior. Entiendes fácilmente a los demás y encuentras resonancia en el arte y la escritura."
+        },
+        "enfj": {
+          "title": "Protagonista",
+          "desc": "Eres cálido, carismático y habilidoso para inspirar a quienes te rodean. Te preocupas por el crecimiento ajeno y unes naturalmente a los equipos."
+        },
+        "enfp": {
+          "title": "Activista",
+          "desc": "Eres enérgico y apasionado por la libertad y las posibilidades. Ves lo mejor de cada persona y iluminas cualquier reunión social."
+        },
+        "istj": {
+          "title": "Logista",
+          "desc": "Eres práctico, confiable y atento a las reglas y los detalles. Trabajas metódicamente y eres la piedra angular de confianza de cualquier equipo."
+        },
+        "isfj": {
+          "title": "Defensor",
+          "desc": "Eres considerado y atento, cuidando en silencio a quienes te rodean. Valoras la responsabilidad y la tradición, demostrando cariño con acciones."
+        },
+        "estj": {
+          "title": "Ejecutivo",
+          "desc": "Eres decisivo y eficiente, habilidoso para gestionar personas y tareas. Valoras el orden y mantienes a los equipos funcionando con claridad."
+        },
+        "esfj": {
+          "title": "Cónsul",
+          "desc": "Eres amable y servicial, siempre procurando un ambiente armonioso. Te fijas en las necesidades ajenas y eres el cálido centro de los eventos sociales."
+        },
+        "istp": {
+          "title": "Virtuoso",
+          "desc": "Eres calmado, práctico y disfrutas resolver problemas con las manos. Te encanta explorar cómo funcionan las cosas; para ti, la acción habla más que las palabras."
+        },
+        "isfp": {
+          "title": "Aventurero",
+          "desc": "Eres sensible, relajado y posees una estética única. Vives el presente y expresas tu mundo interior a través del arte."
+        },
+        "estp": {
+          "title": "Emprendedor",
+          "desc": "Eres audaz, ingenioso y te gustan los retos. Aprovechas las oportunidades y siempre encuentras diversión y una salida ante el cambio."
+        },
+        "esfp": {
+          "title": "Animador",
+          "desc": "Eres entusiasta y extrovertido, el alma de la fiesta. Disfrutas el presente y conviertes los momentos ordinarios en espectáculos animados."
+        }
+      }
+    },
+    "sbti": {
+      "title": "SBTI",
+      "subtitle": "Test de personalidad bobo y grande",
+      "description": "Un test de personalidad de memes y tono ligero. No lo tomes demasiado en serio.",
+      "energyLeft": "Vibe muerto",
+      "energyRight": "Vibe vivo",
+      "socialLeft": "Malo",
+      "socialRight": "Jefe",
+      "moneyLeft": "Pobre",
+      "moneyRight": "ATM",
+      "o": {
+        "stronglyLeft": "Totalmente en desacuerdo",
+        "left": "En desacuerdo",
+        "neutral": "No estoy seguro",
+        "right": "De acuerdo",
+        "stronglyRight": "Totalmente de acuerdo"
+      },
+      "q1": "Cada mañana me despierto sintiéndome como un cadáver que respira.",
+      "q2": "Los fines de semana prefiero quedarme en casa antes que salir.",
+      "q3": "Mis amigos dicen que siempre parezco con poca batería, como un modo ahorro personificado.",
+      "q4": "En los chats grupales, suelo ser el primero en pillar el chiste y animar el ambiente.",
+      "q5": "Me gusta organizar eventos y siento logro cuando todos se reúnen a mi alrededor.",
+      "q6": "Prefiero tomar mis propias decisiones antes que seguir a otros.",
+      "q7": "En las reuniones no puedo evitar interrumpir para dar mi opinión.",
+      "q8": "Cuando veo algo que me gusta, lo compro sin dudarlo.",
+      "q9": "En las salidas siempre ofrezco pagar primero; mi cartera habla antes que yo.",
+      "q10": "Mi filosofía de gasto es que el dinero solo me acompaña en otra forma.",
+      "q11": "Cuando un amigo me pide dinero prestado, me cuesta decir que no.",
+      "q12": "Siento que mis ingresos nunca alcanzan mis gastos.",
+      "result": {
+        "abr": {
+          "title": "Controlador",
+          "desc": "Eres la plantilla de ganador de la vida: enérgico, dominante y con la cartera llena. Mientras otros dudan, tú ya tienes la situación bajo control."
+        },
+        "abp": {
+          "title": "Jefe",
+          "desc": "Llevas un aura de líder natural; dondequiera que vas pareces inspeccionar tu territorio. A veces la cartera está justa, pero tu presencia nunca lo está."
+        },
+        "amr": {
+          "title": "ATM",
+          "desc": "Eres rico en secreto, el financista oculto de tu grupo de amigos. No hablas mucho, pero tu historial de transferencias lo dice todo."
+        },
+        "amp": {
+          "title": "FAKE",
+          "desc": "Pareces inofensivo por fuera, pero tu drama interior es monumental. Dices que estás en modo relax mientras secretamente te esfuerzas: actuación digna de un Oscar."
+        },
+        "dbr": {
+          "title": "HHHH",
+          "desc": "Eres un Malo que por fuera parece muerto pero por dentro está secretamente feliz. Rico pero sin ganas de moverte; tu mayor ejercicio es contar dinero tumbado."
+        },
+        "dbp": {
+          "title": "POOR",
+          "desc": "Eres el trabajador clásico: cansado, sin dinero, pero aún resistiendo. La vida no es fácil, pero tus quejas sobre ella siguen siendo de primera."
+        },
+        "dmr": {
+          "title": "IMSB",
+          "desc": "Eres callado, pero tu saldo bancario habla por ti. El clásico rico silencioso: batería social en cero, batería financiera al máximo."
+        },
+        "dmp": {
+          "title": "DEAD",
+          "desc": "Ya viste a través de la vida y entraste en un estado de 'vivo pero no del todo'. La pobreza te mantiene despierto y el vibe muerto te mantiene en paz."
+        }
+      }
+    },
+    "8values": {
+      "title": "8Values",
+      "subtitle": "Test de brújula política",
+      "description": "Descubre tu inclinación en los ejes económico, diplomático, civil y social con 16 preguntas.",
+      "equality": "Igualdad",
+      "markets": "Mercados",
+      "nation": "Nación",
+      "globe": "Mundo",
+      "liberty": "Libertad",
+      "authority": "Autoridad",
+      "tradition": "Tradición",
+      "progress": "Progreso",
+      "o": {
+        "stronglyLeft": "Totalmente en desacuerdo",
+        "left": "En desacuerdo",
+        "neutral": "No estoy seguro",
+        "right": "De acuerdo",
+        "stronglyRight": "Totalmente de acuerdo"
+      },
+      "q1": "El gobierno debería usar altos impuestos para reducir la desigualdad de riqueza.",
+      "q2": "La atención médica y la educación básicas deberían ser gratuitas y del gobierno.",
+      "q3": "La libre competencia de mercado importa más que la redistribución de la riqueza.",
+      "q4": "La economía de mercado es la forma más efectiva de crear riqueza.",
+      "q5": "Los intereses nacionales deberían tener prioridad sobre la cooperación internacional.",
+      "q6": "Proteger las industrias y empleos locales es más importante que la globalización.",
+      "q7": "Las fronteras entre países deberían estar más abiertas.",
+      "q8": "Los problemas globales requieren que los países trabajen y negocien juntos.",
+      "q9": "La libertad individual importa más que el orden social.",
+      "q10": "El gobierno debería tener el poder de vigilar a los ciudadanos por seguridad.",
+      "q11": "Los ciudadanos deberían poder criticar al gobierno sin ser castigados.",
+      "q12": "Un liderazgo fuerte ayuda a que la sociedad funcione con eficiencia.",
+      "q13": "Los valores tradicionales son una base importante para la estabilidad social.",
+      "q14": "La sociedad debería aceptar activamente nuevas formas de vida e ideas.",
+      "q15": "La religión y las costumbres aún tienen un significado importante en la sociedad moderna.",
+      "q16": "El progreso tecnológico y el cambio social deberían acelerarse.",
+      "result": {
+        "authleft": {
+          "title": "Izquierda autoritaria",
+          "desc": "Apoyas una fuerte intervención estatal para lograr la igualdad económica y la justicia social. Para ti, los intereses colectivos superan la libertad individual, y la planificación y el orden son claves del progreso."
+        },
+        "authright": {
+          "title": "Derecha autoritaria",
+          "desc": "Valoras la tradición, el orden y la autoridad nacional, creyendo que el libre mercado y el poder estatal pueden coexistir. Sueles defender los valores existentes y un gobierno fuerte."
+        },
+        "libleft": {
+          "title": "Izquierda libertaria",
+          "desc": "Buscas combinar la libertad personal con la igualdad social, oponiéndote a las estructuras de autoridad opresivas. Tu ideal es una sociedad diversa, inclusiva y de apoyo mutuo."
+        },
+        "libright": {
+          "title": "Derecha libertaria",
+          "desc": "Defiendes la libertad individual, la propiedad privada y los mercados libres, creyendo que el mejor gobierno es el más pequeño. Confías en que la competencia y la innovación generan prosperidad."
+        }
+      }
+    }
+  }
+}

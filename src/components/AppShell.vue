@@ -8,14 +8,17 @@ const router = useRouter();
 const { t } = useI18n();
 
 const hideNav = computed(() =>
-  route.path === "/sokoban" || route.path === "/deal-or-no-deal"
+  route.path === "/sokoban" ||
+  route.path === "/deal-or-no-deal" ||
+  route.path === "/typing" ||
+  route.path === "/selftest"
 );
 
-const navItems = [
+const navItems = computed(() => [
   { path: "/", label: t("nav.games"), icon: "sports_esports" },
   { path: "/achievements", label: t("nav.achievements"), icon: "emoji_events" },
   { path: "/settings", label: t("nav.settings"), icon: "settings" },
-];
+]);
 
 function isActive(path: string) {
   return route.path === path;

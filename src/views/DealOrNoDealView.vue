@@ -3,6 +3,8 @@ import { ref, watch, computed, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useDealStore } from "@/stores/useDealStore";
+import { useExitConfirm } from "@/composables/useExitConfirm";
+import ExitConfirmDialog from "@/components/ExitConfirmDialog.vue";
 import { getEliminationCountForRound } from "@/games/deal/DealBanker";
 import { DEAL_AMOUNTS } from "@/games/deal/DealEngine";
 import type { DealBriefcase } from "@/types";
@@ -10,9 +12,9 @@ import type { DealBriefcase } from "@/types";
 const router = useRouter();
 const { t } = useI18n();
 const store = useDealStore();
+const { open, requestExit, confirm, cancel } = useExitConfirm();
 
 const showFinished = ref(false);
-const forfeitDialogOpen = ref(false);
 const boardRef = ref<HTMLDivElement | null>(null);
 const gridStyle = ref<Record<string, string>>({});
 
@@ -91,16 +93,10 @@ function proceedToDecide() {
 
 function backHome() {
   if (store.isGameActive) {
-    forfeitDialogOpen.value = true;
+    requestExit("/", store.resetGame);
   } else {
     router.push("/");
   }
-}
-
-function confirmForfeit() {
-  forfeitDialogOpen.value = false;
-  store.resetGame();
-  router.push("/");
 }
 
 function newGame() {
@@ -282,22 +278,12 @@ const amountBoard = computed(() => {
       </div>
     </div>
 
-    <div v-if="forfeitDialogOpen" class="modal-backdrop" @click.self="forfeitDialogOpen = false"
-      >
-      <div class="modal"
-        >
-        <div class="modal-title">{{ t("deal.title") }}</div>
-        <div class="modal-content"
-          >{{ t("deal.forfeitConfirm") }}</div>
-        <div class="modal-actions"
-          >
-          <button class="modal-btn secondary" @click="forfeitDialogOpen = false"
-            >{{ t("common.cancel") }}</button>
-          <button class="modal-btn primary" @click="confirmForfeit"
-            >{{ t("common.confirm") }}</button>
-        </div>
-      </div>
-    </div>
+    <ExitConfirmDialog
+      :open="open"
+      :message="t('deal.forfeitConfirm')"
+      @confirm="confirm"
+      @cancel="cancel"
+    />
   </div>
 </template>
 
@@ -375,12 +361,13 @@ const amountBoard = computed(() => {
 }
 
 .case.eliminated {
-  background: #eaddff;
-  color: #1d192b;
+  background: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 .case.own {
-  background: #6750a4;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
   box-shadow: inset 0 0 0 3px #ffd700;
 }
 

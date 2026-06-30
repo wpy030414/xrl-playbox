@@ -1,12 +1,12 @@
 [package]
-name = "gamebox"
+name = "xrl-playbox"
 version = "0.1.0"
-description = "A Tauri-based mini game collection"
-authors = ["you"]
+description = "XRL Playbox - A Tauri-based mini game collection"
+authors = ["wpy030414"]
 edition = "2021"
 
 [lib]
-name = "gamebox_lib"
+name = "xrl_playbox_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

@@ -1,4 +1,4 @@
-export type GameId = "sokoban" | "deal";
+export type GameId = "sokoban" | "deal" | "typing" | "selftest";
 
 export interface Achievement {
   id: string;
@@ -62,7 +62,12 @@ export interface DealRoundHistory {
   decision: "deal" | "no-deal" | null;
 }
 
+export type ThemeMode = "light" | "dark" | "system";
+
+export type ThemeColor = "purple" | "blue" | "green" | "red" | "orange" | "pink" | "teal";
+
 export interface Settings {
-  locale: "zh-CN" | "en";
-  soundEnabled: boolean;
+  locale: "zh-CN" | "en" | "ja" | "es";
+  theme: ThemeMode;
+  themeColor: ThemeColor;
 }

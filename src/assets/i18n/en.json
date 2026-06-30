@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "GameBox",
+    "title": "XRL Playbox",
     "subtitle": "Mini Game Collection"
   },
   "nav": {
@@ -14,7 +14,12 @@
     "greeting": "Choose a game to play",
     "play": "Play",
     "sortByName": "Sort by name",
-    "sortByLaunch": "Sort by launch order"
+    "sortByLaunch": "Recent first",
+    "lastLaunchNever": "Never played",
+    "justNow": "just now",
+    "minutesAgo": "{n}m ago",
+    "hoursAgo": "{n}h ago",
+    "daysAgo": "{n}d ago"
   },
   "sokoban": {
     "title": "Sokoban",
@@ -61,6 +66,32 @@
     "amountBoard": "Amount Board",
     "forfeitConfirm": "Are you sure you want to forfeit the current game?"
   },
+  "typing": {
+    "title": "Typing Race",
+    "subtitle": "Type excerpts from Mark Twain",
+    "startHint": "Press any key to start",
+    "chooseDifficulty": "Choose Difficulty",
+    "difficulty": {
+      "easy": "Easy",
+      "normal": "Normal",
+      "hard": "Hard",
+      "expert": "Expert",
+      "master": "Master"
+    },
+    "wpm": "WPM",
+    "health": "Health",
+    "time": "Time",
+    "accuracy": "Accuracy",
+    "words": "Words",
+    "baseline": "Baseline",
+    "victory": "Finished!",
+    "defeat": "Out of Health",
+    "finalWpm": "Final speed: {wpm} WPM",
+    "finalAccuracy": "Accuracy: {accuracy}%",
+    "finalWords": "Words typed: {words}",
+    "restart": "Play Again",
+    "forfeitConfirm": "Are you sure you want to quit and forfeit the current game?"
+  },
   "achievements": {
     "title": "Achievements",
     "totalPoints": "Total Points: {points}",
@@ -69,12 +100,27 @@
     "newUnlock": "Achievement Unlocked!",
     "filterAll": "All",
     "filterSokoban": "Sokoban",
-    "filterDeal": "Deal Master"
+    "filterDeal": "Deal Master",
+    "filterTyping": "Typing Race",
+    "filterSelftest": "Self Test"
   },
   "settings": {
     "title": "Settings",
     "language": "Language",
-    "sound": "Sound",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "themeColor": "Theme color",
+    "colorPurple": "Purple",
+    "colorBlue": "Blue",
+    "colorGreen": "Green",
+    "colorRed": "Red",
+    "colorOrange": "Orange",
+    "colorPink": "Pink",
+    "colorTeal": "Teal",
+    "github": "GitHub",
+    "copyright": "wpy030414 / xrl. All rights reserved.",
     "resetData": "Reset All Data",
     "resetConfirm": "Clear all achievements, settings and progress? This cannot be undone.",
     "redeemCode": "Redeem Code",
@@ -122,6 +168,246 @@
     "prophet": {
       "name": "Prophet",
       "desc": "Accepted offer within 1% of your case amount"
+    },
+    "humanPrinter": {
+      "name": "Human Printer",
+      "desc": "Finish the game while staying above the baseline WPM"
+    },
+    "indianTypist": {
+      "name": "Indian Typist",
+      "desc": "Finish the game with over 50% of words wrong"
+    },
+    "hatsuneDisappearance": {
+      "name": "Hatsune Disappearance",
+      "desc": "Type more than 20 words correctly within 10 seconds"
+    }
+  },
+  "selftest": {
+    "title": "Self Test",
+    "subtitle": "MBTI, SBTI, and 8Values fun quizzes",
+    "chooseTest": "Choose a test",
+    "quit": "Quit",
+    "prev": "Previous",
+    "next": "Next",
+    "finish": "Finish",
+    "result": "Result",
+    "restart": "Restart",
+    "forfeitConfirm": "Are you sure you want to quit and abandon the current test?",
+    "mbti": {
+      "title": "MBTI",
+      "subtitle": "Myers-Briggs Type Indicator",
+      "description": "Explore your personality preferences through 12 quick questions.",
+      "e": "Extraversion E",
+      "i": "Introversion I",
+      "s": "Sensing S",
+      "n": "Intuition N",
+      "t": "Thinking T",
+      "f": "Feeling F",
+      "j": "Judging J",
+      "p": "Perceiving P",
+      "o": {
+        "stronglyAgreeLeft": "Strongly disagree",
+        "agreeLeft": "Disagree",
+        "neutral": "Not sure",
+        "agreeRight": "Agree",
+        "stronglyAgreeRight": "Strongly agree"
+      },
+      "q1": "You feel recharged after spending time alone.",
+      "q2": "You prefer deep one-on-one conversations to large parties.",
+      "q3": "You usually think before you speak.",
+      "q4": "You enjoy exploring abstract ideas and future possibilities.",
+      "q5": "You trust intuition and patterns over concrete facts.",
+      "q6": "You focus on the big picture rather than small details.",
+      "q7": "You consider people's feelings when making decisions.",
+      "q8": "You value harmony and compassion over strict logic.",
+      "q9": "You often rely on empathy to judge a situation.",
+      "q10": "You prefer to keep your options open rather than plan everything.",
+      "q11": "You adapt easily to unexpected changes.",
+      "q12": "You enjoy spontaneous decisions more than following a fixed schedule.",
+      "result": {
+        "intj": {
+          "title": "Architect",
+          "desc": "You are independent, rational, and skilled at long-term planning. Complex systems look like puzzles to you, and you always find the most efficient solution."
+        },
+        "intp": {
+          "title": "Logician",
+          "desc": "You are deeply curious and love exploring theories and principles. You enjoy dissecting problems and seeking truth more than executing plans."
+        },
+        "entj": {
+          "title": "Commander",
+          "desc": "You are a natural leader with clear goals and decisive action. You excel at organizing resources and guiding teams to victory."
+        },
+        "entp": {
+          "title": "Debater",
+          "desc": "You are witty, provocative, and love examining issues from every angle. Your creativity often surprises others."
+        },
+        "infj": {
+          "title": "Advocate",
+          "desc": "You are quiet yet insightful, highly sensitive to others' emotions. You pursue meaning and quietly work toward your ideals."
+        },
+        "infp": {
+          "title": "Mediator",
+          "desc": "You are gentle, idealistic, and value inner authenticity. You understand others easily and often find resonance in art and writing."
+        },
+        "enfj": {
+          "title": "Protagonist",
+          "desc": "You are warm, charismatic, and skilled at inspiring those around you. You care about others' growth and naturally bring teams together."
+        },
+        "enfp": {
+          "title": "Campaigner",
+          "desc": "You are energetic and passionate about freedom and possibility. You see the best in everyone and light up any social gathering."
+        },
+        "istj": {
+          "title": "Logistician",
+          "desc": "You are practical, reliable, and attentive to rules and details. You work methodically and are a trustworthy cornerstone of any team."
+        },
+        "isfj": {
+          "title": "Defender",
+          "desc": "You are considerate and attentive, quietly caring for those around you. You value responsibility and tradition, showing care through action."
+        },
+        "estj": {
+          "title": "Executive",
+          "desc": "You are decisive and efficient, skilled at managing people and tasks. You value order and keep teams running smoothly within clear rules."
+        },
+        "esfj": {
+          "title": "Consul",
+          "desc": "You are friendly and helpful, eager to create a harmonious atmosphere. You pay attention to others' needs and are the warm center of social events."
+        },
+        "istp": {
+          "title": "Virtuoso",
+          "desc": "You are calm, practical, and enjoy hands-on problem solving. You love exploring how things work, and action speaks louder than words for you."
+        },
+        "isfp": {
+          "title": "Adventurer",
+          "desc": "You are sensitive, easygoing, and possess a unique aesthetic sense. You live in the moment and express your inner world through art."
+        },
+        "estp": {
+          "title": "Entrepreneur",
+          "desc": "You are bold, quick-witted, and love taking on challenges. You seize opportunities and always find excitement and a way forward amid change."
+        },
+        "esfp": {
+          "title": "Entertainer",
+          "desc": "You are enthusiastic and outgoing, the life of the party. You enjoy the present and turn ordinary moments into lively performances."
+        }
+      }
+    },
+    "sbti": {
+      "title": "SBTI",
+      "subtitle": "Silly Big Personality Test",
+      "description": "A lighthearted meme personality test. Don't take it too seriously.",
+      "energyLeft": "Dead vibe",
+      "energyRight": "Alive vibe",
+      "socialLeft": "Malo",
+      "socialRight": "Boss",
+      "moneyLeft": "Poor",
+      "moneyRight": "ATM",
+      "o": {
+        "stronglyLeft": "Strongly disagree",
+        "left": "Disagree",
+        "neutral": "Not sure",
+        "right": "Agree",
+        "stronglyRight": "Strongly agree"
+      },
+      "q1": "Every morning I wake up feeling like a breathing corpse.",
+      "q2": "On weekends I'd rather lie around at home than go out.",
+      "q3": "My friends say I always look low-battery, like a power-saving mode personified.",
+      "q4": "In group chats, I'm usually the quickest to catch the joke and hype up the mood.",
+      "q5": "I enjoy organizing events and feel accomplished when everyone gathers around me.",
+      "q6": "I'd rather make my own decisions than follow someone else's lead.",
+      "q7": "In meetings, I often can't resist jumping in with my opinions.",
+      "q8": "When I see something I like, I buy it without hesitation.",
+      "q9": "At gatherings, I always offer to pay first, and my wallet speaks before I do.",
+      "q10": "My spending philosophy is that money is just accompanying me in another form.",
+      "q11": "When friends ask to borrow money, I often find it hard to say no.",
+      "q12": "I feel like my income can never catch up with my spending.",
+      "result": {
+        "abr": {
+          "title": "Controller",
+          "desc": "You're the life-winner template: energetic, commanding, and financially loaded. While others hesitate, you've already got the situation firmly in hand."
+        },
+        "abp": {
+          "title": "Boss",
+          "desc": "You naturally carry a leader's aura and look like you're inspecting your territory wherever you go. Your wallet may be tight sometimes, but your presence never is."
+        },
+        "amr": {
+          "title": "ATM",
+          "desc": "You're low-key wealthy, the hidden financier of your friend group. You don't talk much, but your transfer history says it all."
+        },
+        "amp": {
+          "title": "FAKE",
+          "desc": "You look harmless on the surface, but your inner drama is off the charts. You claim to be lying flat while secretly grinding—Oscar-worthy performance."
+        },
+        "dbr": {
+          "title": "HHHH",
+          "desc": "You're a Malo who looks dead on the outside but is secretly delighted inside. Rich but unmotivated, your biggest exercise is lying down and counting money."
+        },
+        "dbp": {
+          "title": "POOR",
+          "desc": "You're the classic worker: tired, broke, but still hanging in there. Life isn't easy, but your roasts about it are still top-tier."
+        },
+        "dmr": {
+          "title": "IMSB",
+          "desc": "You're quiet, but your account balance does the talking. The classic silent-but-loaded type: zero social battery, full financial battery."
+        },
+        "dmp": {
+          "title": "DEAD",
+          "desc": "You've seen through life and entered a state of 'alive but not really.' Poverty keeps you awake, and the dead vibe keeps you peaceful."
+        }
+      }
+    },
+    "8values": {
+      "title": "8Values",
+      "subtitle": "Political compass test",
+      "description": "Discover your leanings across economic, diplomatic, civil, and social axes through 16 questions.",
+      "equality": "Equality",
+      "markets": "Markets",
+      "nation": "Nation",
+      "globe": "Globe",
+      "liberty": "Liberty",
+      "authority": "Authority",
+      "tradition": "Tradition",
+      "progress": "Progress",
+      "o": {
+        "stronglyLeft": "Strongly disagree",
+        "left": "Disagree",
+        "neutral": "Not sure",
+        "right": "Agree",
+        "stronglyRight": "Strongly agree"
+      },
+      "q1": "The government should use high taxes to reduce wealth inequality.",
+      "q2": "Basic healthcare and education should be provided free by the government.",
+      "q3": "Free market competition matters more than wealth redistribution.",
+      "q4": "A market economy is the most effective way to create wealth.",
+      "q5": "National interests should take priority over international cooperation.",
+      "q6": "Protecting domestic industries and jobs is more important than globalization.",
+      "q7": "Borders between countries should be more open.",
+      "q8": "Global problems require countries to work together and negotiate.",
+      "q9": "Individual freedom matters more than social order.",
+      "q10": "The government should have the power to monitor citizens for security.",
+      "q11": "Citizens should be able to criticize the government without punishment.",
+      "q12": "Strong leadership helps society run efficiently.",
+      "q13": "Traditional values are an important foundation for social stability.",
+      "q14": "Society should actively embrace new lifestyles and ideas.",
+      "q15": "Religion and custom still have significant meaning in modern society.",
+      "q16": "Technological progress and social change should be accelerated.",
+      "result": {
+        "authleft": {
+          "title": "Authoritarian Left",
+          "desc": "You support strong state intervention to achieve economic equality and social fairness. In your view, collective interests outweigh individual freedom, and planning and order are keys to progress."
+        },
+        "authright": {
+          "title": "Authoritarian Right",
+          "desc": "You value tradition, order, and national authority, believing free markets and state power can coexist. You tend to uphold existing values while supporting strong governance."
+        },
+        "libleft": {
+          "title": "Libertarian Left",
+          "desc": "You seek a combination of personal freedom and social equality, opposing oppressive authority structures. Your ideal is a diverse, inclusive, and mutual-aid society."
+        },
+        "libright": {
+          "title": "Libertarian Right",
+          "desc": "You champion individual freedom, private property, and free markets, believing the least government is the best government. You trust competition and innovation to bring prosperity."
+        }
+      }
     }
   }
 }

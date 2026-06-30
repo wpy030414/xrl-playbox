@@ -1,7 +1,8 @@
 {
-  "name": "gamebox",
+  "name": "xrl-playbox",
   "private": true,
   "type": "module",
+  "description": "XRL Playbox - A Tauri v2 + Vue 3 mini game collection",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",

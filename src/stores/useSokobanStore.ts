@@ -1,9 +1,18 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { SokobanEngine } from "@/games/sokoban/SokobanEngine";
+import type { SokobanLevel } from "@/games/sokoban/SokobanEngine";
 import { generateLevel } from "@/games/sokoban/SokobanGenerator";
 import { useAchievement } from "@/composables/useAchievement";
+import {
+  mulberry32,
+  randomSeed,
+  requestIdleCallbackPolyfill,
+  cancelIdleCallbackPolyfill,
+} from "@/utils/random";
 import type { Direction, SokobanMoveResult } from "@/types";
+
+const PREFETCH_AHEAD = 5;
 
 export const useSokobanStore = defineStore("sokoban", () => {
   const { checkAndUnlock } = useAchievement();
@@ -15,6 +24,9 @@ export const useSokobanStore = defineStore("sokoban", () => {
   const consecutiveResets = ref(0);
   const maxBoxesOnTargetInRun = ref(0);
   const firstTimeLevel5 = ref(true);
+  const gameSeed = ref(0);
+  const levelCache = ref<Map<number, SokobanLevel>>(new Map());
+  let idleCallbackId: number | null = null;
 
   const levelData = computed(() => engine.value?.toLevel() ?? null);
   const stepsUsed = computed(() => engine.value?.steps ?? 0);
@@ -22,9 +34,47 @@ export const useSokobanStore = defineStore("sokoban", () => {
   const boxesOnTarget = computed(() => engine.value?.countBoxesOnTarget() ?? 0);
   const totalTargets = computed(() => engine.value?.totalTargets() ?? 0);
 
-  function createEngine(level: number): SokobanEngine {
-    const levelData = generateLevel(level);
-    return SokobanEngine.fromLevel(levelData);
+  function cancelPreGeneration() {
+    if (idleCallbackId !== null) {
+      cancelIdleCallbackPolyfill(idleCallbackId);
+      idleCallbackId = null;
+    }
+  }
+
+  function getOrGenerateLevel(level: number): SokobanLevel {
+    const cached = levelCache.value.get(level);
+    if (cached) return cached;
+
+    const rng = mulberry32(gameSeed.value + level * 0x9e3779b9);
+    const data = generateLevel(level, rng);
+    levelCache.value.set(level, data);
+    return data;
+  }
+
+  function schedulePreGeneration(fromLevel: number) {
+    cancelPreGeneration();
+
+    const generateBatch = (deadline: IdleDeadline) => {
+      let level = fromLevel;
+      const maxLevel = fromLevel + PREFETCH_AHEAD;
+
+      while (level < maxLevel && deadline.timeRemaining() > 0) {
+        if (!levelCache.value.has(level)) {
+          const rng = mulberry32(gameSeed.value + level * 0x9e3779b9);
+          const data = generateLevel(level, rng);
+          levelCache.value.set(level, data);
+        }
+        level++;
+      }
+
+      if (level < maxLevel) {
+        idleCallbackId = requestIdleCallbackPolyfill(generateBatch);
+      } else {
+        idleCallbackId = null;
+      }
+    };
+
+    idleCallbackId = requestIdleCallbackPolyfill(generateBatch);
   }
 
   function startAdventure(level = 1) {
@@ -33,10 +83,19 @@ export const useSokobanStore = defineStore("sokoban", () => {
     consecutiveResets.value = 0;
     maxBoxesOnTargetInRun.value = 0;
     status.value = "playing";
-    engine.value = createEngine(level);
+
+    if (level === 1) {
+      gameSeed.value = randomSeed();
+      levelCache.value.clear();
+    }
+
+    engine.value = SokobanEngine.fromLevel(getOrGenerateLevel(level));
+    schedulePreGeneration(level + 1);
   }
 
   function resetGame() {
+    cancelPreGeneration();
+    levelCache.value.clear();
     engine.value = null;
     status.value = "playing";
     resetCountForLevel.value = 0;
@@ -51,7 +110,9 @@ export const useSokobanStore = defineStore("sokoban", () => {
     consecutiveResets.value = 0;
     maxBoxesOnTargetInRun.value = 0;
     status.value = "playing";
-    engine.value = createEngine(currentLevel.value);
+
+    engine.value = SokobanEngine.fromLevel(getOrGenerateLevel(currentLevel.value));
+    schedulePreGeneration(currentLevel.value + 1);
   }
 
   function resetLevel() {
@@ -105,6 +166,8 @@ export const useSokobanStore = defineStore("sokoban", () => {
     consecutiveResets,
     maxBoxesOnTargetInRun,
     firstTimeLevel5,
+    gameSeed,
+    levelCache,
     levelData,
     stepsUsed,
     stepLimit,

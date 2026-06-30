@@ -4,11 +4,12 @@ import { fileURLToPath, URL } from "node:url";
 
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
-const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "pushing-box";
+const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "xrl-playbox";
+const base = process.env.BASE_PATH || (process.env.GITHUB_PAGES ? `/${repoName}/` : "/");
 
 // https://vite.dev/config/
 export default defineConfig(async () => ({
-  base: process.env.GITHUB_PAGES ? `/${repoName}/` : "/",
+  base,
   plugins: [
     vue({
       template: {

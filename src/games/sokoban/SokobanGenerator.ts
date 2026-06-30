@@ -1,4 +1,5 @@
 import type { Position, SokobanGrid } from "@/types";
+import type { Rng } from "@/utils/random";
 import { SokobanEngine, type SokobanLevel } from "./SokobanEngine";
 
 interface GenState {
@@ -20,11 +21,10 @@ export function calculateDifficulty(level: number): {
   reverseDepth: number;
   stepLimit: number;
 } {
-  const size = Math.min(8 + Math.floor(level / 3), 16);
-  const boxCount = Math.min(1 + Math.floor(level / 2), 8);
-  const reverseDepth = 30 + level * 8;
-  const baseSteps = 40 + boxCount * 16;
-  const stepLimit = Math.max(baseSteps - level * 2, boxCount * 10 + 30);
+  const size = Math.min(8 + Math.floor((level - 1) / 3), 14);
+  const boxCount = Math.min(2 + Math.floor((level - 1) / 2), 8);
+  const reverseDepth = 40 + level * 8;
+  const stepLimit = Math.max(reverseDepth + boxCount * 10, boxCount * 12 + 30);
   return { size, boxCount, reverseDepth, stepLimit };
 }
 
@@ -79,35 +79,31 @@ function openNeighbors(grid: SokobanGrid, pos: Position, size: number): Position
   return neighbors;
 }
 
-function addInternalWalls(grid: SokobanGrid, size: number, level: number) {
+function addInternalWalls(grid: SokobanGrid, size: number, level: number, rng: Rng) {
   const center = Math.floor(size / 2);
   const protectedRadius = 3;
 
-  // Number of wall blocks scales with level
-  const wallCount = Math.min(4 + Math.floor(level / 2), Math.floor((size - 2) * (size - 2) * 0.18));
+  const wallCount = Math.min(4 + Math.floor(level / 2), Math.floor((size - 2) * (size - 2) * 0.2));
 
   let placed = 0;
   let attempts = 0;
   while (placed < wallCount && attempts < 200) {
     attempts++;
-    const x = 1 + Math.floor(Math.random() * (size - 2));
-    const y = 1 + Math.floor(Math.random() * (size - 2));
+    const x = 1 + Math.floor(rng() * (size - 2));
+    const y = 1 + Math.floor(rng() * (size - 2));
 
-    // Protect central area for initial box placement
     if (Math.abs(x - center) < protectedRadius && Math.abs(y - center) < protectedRadius) continue;
 
     if (grid[y][x].wall) continue;
 
-    // Try placing a small wall block (1x1 or 2x1 or 1x2)
-    const blockType = Math.random();
+    const blockType = rng();
     const cells: Position[] = [{ x, y }];
     if (blockType > 0.6 && x + 1 < size - 1) cells.push({ x: x + 1, y });
     else if (blockType > 0.3 && y + 1 < size - 1) cells.push({ x, y: y + 1 });
 
-    // Don't block protected center
-    if (cells.some((c) => Math.abs(c.x - center) < protectedRadius && Math.abs(c.y - center) < protectedRadius)) continue;
+    if (cells.some((c) => Math.abs(c.x - center) < protectedRadius && Math.abs(c.y - center) < protectedRadius))
+      continue;
 
-    // Temporarily place and check connectivity
     for (const c of cells) grid[c.y][c.x].wall = true;
     const connected = isFullyConnected(grid, size, { x: center, y: center });
     if (connected) {
@@ -163,18 +159,15 @@ function findOpenCells(grid: SokobanGrid, size: number): Position[] {
   return cells;
 }
 
-function selectTargets(grid: SokobanGrid, size: number, boxCount: number): Position[] | null {
+function selectTargets(grid: SokobanGrid, size: number, boxCount: number, rng: Rng): Position[] | null {
   const deadEnds = findDeadEnds(grid, size);
-  // Prefer dead ends, but fall back to open cells
   const candidates = deadEnds.length >= boxCount ? deadEnds : findOpenCells(grid, size);
   if (candidates.length < boxCount) return null;
 
-  // Shuffle candidates
-  const shuffled = [...candidates].sort(() => Math.random() - 0.5);
+  const shuffled = [...candidates].sort(() => rng() - 0.5);
   const targets: Position[] = [];
 
   for (const pos of shuffled) {
-    // Ensure targets aren't too close to each other
     const tooClose = targets.some((t) => Math.abs(t.x - pos.x) + Math.abs(t.y - pos.y) < 2);
     if (tooClose) continue;
     targets.push(pos);
@@ -182,7 +175,6 @@ function selectTargets(grid: SokobanGrid, size: number, boxCount: number): Posit
   }
 
   if (targets.length < boxCount) {
-    // Fill remaining with any candidates
     for (const pos of shuffled) {
       if (!targets.some((t) => t.x === pos.x && t.y === pos.y)) {
         targets.push(pos);
@@ -195,7 +187,6 @@ function selectTargets(grid: SokobanGrid, size: number, boxCount: number): Posit
 }
 
 function placePlayerForSolved(grid: SokobanGrid, boxes: Position[], size: number): Position | null {
-  // Player should be adjacent to first box, in a valid pull position
   const firstBox = boxes[0];
   for (const dir of DIRECTIONS) {
     const playerPos = { x: firstBox.x - dir.x, y: firstBox.y - dir.y };
@@ -209,7 +200,6 @@ function placePlayerForSolved(grid: SokobanGrid, boxes: Position[], size: number
 function getReverseMoves(state: GenState, size: number): GenState[] {
   const moves: GenState[] = [];
 
-  // Walk moves (no pull)
   for (const dir of DIRECTIONS) {
     const next = { x: state.player.x + dir.x, y: state.player.y + dir.y };
     if (!inBounds(next, size)) continue;
@@ -222,7 +212,6 @@ function getReverseMoves(state: GenState, size: number): GenState[] {
     moves.push({ grid: newGrid, player: next, boxes: state.boxes });
   }
 
-  // Pull moves (reverse push)
   for (const dir of DIRECTIONS) {
     const boxPos = { x: state.player.x + dir.x, y: state.player.y + dir.y };
     if (!inBounds(boxPos, size)) continue;
@@ -257,7 +246,7 @@ function boxSetsEqual(a: Position[], b: Position[]): boolean {
   return sa.every((p, i) => p.x === sb[i].x && p.y === sb[i].y);
 }
 
-function reversePlay(initial: GenState, size: number, depth: number, boxCount: number): GenState | null {
+function reversePlay(initial: GenState, size: number, depth: number, boxCount: number, rng: Rng): GenState | null {
   const history = new Set<string>([stateKey(initial)]);
   let current = initial;
   let pullCount = 0;
@@ -268,12 +257,11 @@ function reversePlay(initial: GenState, size: number, depth: number, boxCount: n
     const validMoves = moves.filter((m) => !history.has(stateKey(m)));
     const candidates = validMoves.length > 0 ? validMoves : moves;
 
-    // Prefer pull moves, especially until every box has been moved at least once
     const pullMoves = candidates.filter((m) => !boxSetsEqual(m.boxes, current.boxes));
     const choosePull = pullCount < boxCount && pullMoves.length > 0;
     const pool = choosePull ? pullMoves : candidates;
     const previousBoxes = current.boxes;
-    current = pool[Math.floor(Math.random() * pool.length)];
+    current = pool[Math.floor(rng() * pool.length)];
 
     if (!boxSetsEqual(current.boxes, previousBoxes)) {
       pullCount++;
@@ -282,7 +270,6 @@ function reversePlay(initial: GenState, size: number, depth: number, boxCount: n
     history.add(stateKey(current));
   }
 
-  // Reject levels where any box is still sitting on a target
   for (const box of current.boxes) {
     if (current.grid[box.y][box.x].target) return null;
   }
@@ -290,18 +277,17 @@ function reversePlay(initial: GenState, size: number, depth: number, boxCount: n
   return current;
 }
 
-export function generateLevel(level: number): SokobanLevel {
+export function generateLevel(level: number, rng: Rng): SokobanLevel {
   const { size, boxCount, reverseDepth, stepLimit } = calculateDifficulty(level);
 
   for (let attempt = 0; attempt < 80; attempt++) {
     const grid = createEmptyGrid(size);
     addBorderWalls(grid, size);
-    addInternalWalls(grid, size, level);
+    addInternalWalls(grid, size, level, rng);
 
-    const targets = selectTargets(grid, size, boxCount);
+    const targets = selectTargets(grid, size, boxCount, rng);
     if (!targets) continue;
 
-    // Place boxes on targets for initial solved state
     for (const t of targets) {
       grid[t.y][t.x].box = true;
       grid[t.y][t.x].target = true;
@@ -317,10 +303,9 @@ export function generateLevel(level: number): SokobanLevel {
       boxes: targets.map((t) => ({ ...t })),
     };
 
-    const scrambled = reversePlay(initialState, size, reverseDepth, boxCount);
+    const scrambled = reversePlay(initialState, size, reverseDepth, boxCount, rng);
     if (!scrambled) continue;
 
-    // Build final level
     const finalGrid = createEmptyGrid(size);
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
@@ -334,11 +319,10 @@ export function generateLevel(level: number): SokobanLevel {
       }
     }
 
-    // Ensure player cell is clear of box/target
+    // Ensure player cell is clear of box (it may still be a target).
     const playerCell = finalGrid[scrambled.player.y][scrambled.player.x];
     playerCell.player = true;
     playerCell.box = false;
-    playerCell.target = false;
 
     const boxes: Position[] = [];
     const finalTargets: Position[] = [];
@@ -350,7 +334,10 @@ export function generateLevel(level: number): SokobanLevel {
       }
     }
 
-    const levelData: SokobanLevel = {
+    if (boxes.length !== finalTargets.length) continue;
+    if (finalGrid[scrambled.player.y][scrambled.player.x].wall) continue;
+
+    return {
       grid: finalGrid,
       player: { ...scrambled.player },
       boxes,
@@ -358,10 +345,6 @@ export function generateLevel(level: number): SokobanLevel {
       size,
       stepLimit,
     };
-
-    if (isSolvable(levelData)) {
-      return levelData;
-    }
   }
 
   return createFallbackLevel(size, boxCount, stepLimit);
@@ -372,25 +355,32 @@ function createFallbackLevel(size: number, boxCount: number, stepLimit: number):
   addBorderWalls(grid, size);
   const boxes: Position[] = [];
   const targets: Position[] = [];
-  const startX = 2;
-  const startY = 2;
 
-  for (let i = 0; i < boxCount; i++) {
-    const x = startX + i * 2;
-    const y = startY;
+  // Place boxes/targets in a snake that always stays inside the border.
+  let placed = 0;
+  let x = 2;
+  let y = 2;
+  while (placed < boxCount && y < size - 1) {
+    if (x + 1 >= size - 1) {
+      x = 2;
+      y += 2;
+      continue;
+    }
     grid[y][x].box = true;
     grid[y][x + 1].target = true;
     boxes.push({ x, y });
     targets.push({ x: x + 1, y });
+    placed++;
+    x += 2;
   }
 
-  const player = { x: startX, y: startY + 1 };
+  const player = { x: 2, y: Math.min(3, size - 2) };
   grid[player.y][player.x].player = true;
 
   return { grid, player, boxes, targets, size, stepLimit };
 }
 
-// Bounded BFS solver that searches push sequences
+// Bounded BFS solver kept for debugging / external validation.
 export function isSolvable(level: SokobanLevel, maxPushes = 120): boolean {
   const engine = SokobanEngine.fromLevel(level);
   const initialBoxes = engine.grid
@@ -441,11 +431,7 @@ export function isSolvable(level: SokobanLevel, maxPushes = 120): boolean {
   return false;
 }
 
-function computeReachable(
-  player: Position,
-  boxes: Position[],
-  level: SokobanLevel
-): Set<string> {
+function computeReachable(player: Position, boxes: Position[], level: SokobanLevel): Set<string> {
   const boxSet = new Set(boxes.map(posKey));
   const reachable = new Set<string>([posKey(player)]);
   const queue: Position[] = [player];
